@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Dojo Survey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
+  <script src="jquery.js"></script>
+  <script>
+    $(document).ready(function(){
+      var socket = io();
+      $('#form1').submit( function(e){
+        e.preventDefault()
+        socket.emit('posting_form',{name:$('#name').val(),location:$('#location').val(), language:$('#language').val(),comment:$('#comment').val()})
+      })
+      socket.on('updated_message', function (data) { 
+        console.log(data)
+        $('#info').html('')
+        $('#info').append('<p>You emitted the following information to the server:</p>')
+        for (let i in data){
+          $('#info').append('<p>'+i+': '+data[i]+'</p>')
+        }
+      });
+      socket.on('random_number', function (data) { 
+        console.log(data)
+        $('#info').append('<p>Your lucky number emitted by the server is '+data.rand)
+      });
+    })
+
+  </script>
+</head>
+<body>
+  <div id="info" class="box">
+
+  </div>
+  <div class="box">
+    <form  id="form1" action="">
+      <div class="form-group">
+        <label for="email">Name:</label>
+        <input type="text" class="form-control" name="name" id="name">
+      </div>
+      <div class="form-group">
+        <label for="sel1">Dojo Location:</label>
+        <select class="form-control" name="sel1" id="location">
+          <option>Washington</option>
+          <option>Seattle</option>
+          <option>Kansas City</option>
+          <option>San Francisco</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="sel2">Favorite Language:</label>
+        <select class="form-control" name="sel2" id="language">
+          <option>JavaScript</option>
+          <option>Python</option>
+          <option>Ruby</option>
+          <option>MEAN</option>
+        </select>
+      </div>
+      <label for="comment">Comment:</label>
+      <textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+  </div>
+</body>
+</html>
