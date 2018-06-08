@@ -1,0 +1,25 @@
+
+#namebox {
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    border: 2px solid black;
+    padding: 20px;
+
+}
+#messagebox {
+    width: 800px;
+    height: 600px;
+    margin: auto;
+    border: 2px solid black;
+    padding: 20px;
+
+}
+#messagearea{
+    width: 800px;
+    height: 600px;
+    margin: auto;
+}
+#message{
+    width: 90%;
+}

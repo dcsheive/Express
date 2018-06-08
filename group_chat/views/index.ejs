@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Group Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
+  <script src="jquery.js"></script>
+  <script>
+    $(document).ready(function(){
+      var socket = io();
+      $('#messagearea').hide()
+      $('#join').click( function(e){
+        e.preventDefault()
+        data = {
+          name: $('#name').val(),
+          id: $('#poster').val()
+        }
+        socket.emit('user', data)
+        $('#namebox').hide()
+        $('#messagearea').show()
+      })
+      $(document).on('click','#send', function(e){
+        e.preventDefault()
+        data = {
+          message: $('#message').val(),
+          id: $('#poster').val()
+        }
+        socket.emit('message', data)
+        $('#message').val('')
+      })
+      socket.on('new_message', function (data) { 
+        $('p:first').before('<p>'+data.name+': '+data.message+'</p>')
+      });
+      
+    })
+
+  </script>
+</head>
+<body>
+  <div id="messagearea">
+    <div id="messagebox" >
+      <p style="margin: unset;"></p>
+      <% for (let i =messages.length-1 ; i >= 0 ; i--) {%>
+        <p><%=messages[i]['name']%>: <%=messages[i]['message']%></p>
+      <% } %>
+    </div>
+    <form action="" method="POST">
+      <input type="text" name="message" id="message" placeholder="enter message here">
+      <input type="hidden" name="poster" id="poster" value="<%=currentuser%>">
+      <button id="send" type="submit">Send</button>
+    </form>
+  </div>
+  
+  <div id="namebox">
+    <form action="" method="post">
+        <label for="name">Please enter your name below</label>
+        <input type="text" name="name" id="name">
+        <input type="hidden" name="poster" id="poster" value="<%=currentuser%>">
+        <button id="join" type="submit">Join</button>
+    </form>
+  </div>
+</body>
+</html>
